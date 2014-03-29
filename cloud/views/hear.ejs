@@ -1,0 +1,92 @@
+
+<!DOCTYPE html>
+<html lang=en>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <title>Hear Me Here</title>
+
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+  </head>
+  <body>
+
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-xs-12">
+
+          <h1>Hear Me Here</h1>
+
+          <div class="alert alert-warning fade in">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">x</button>
+            <strong>Work in progress</strong> - expect everything to fail once in a while.
+          </div>
+
+          <% if (success && data) { %>
+          <div class="alert alert-success fade in">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">x</button>
+            <strong>Saved location <span class="glyphicon glyphicon-ok"></span></strong> - <%= data.location_name %>, <%= data.location_type %>, <%= data.location_info %>
+          </div>
+          <% } %>
+
+          <% if (!success) { %>
+          <div class="alert alert-danger fade in">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">x</button>
+            <strong>Couldn't save the data!</strong> - <%= data.location_name %>, <%= data.location_type %>, <%= data.location_info %>
+          </div>
+          <% } %>
+
+          <p class="lead">Say what's important about this place.</p>
+
+        </div>
+      </div>
+
+      <hr>
+      
+      <div class="row">
+        <div class="col-xs-12">
+          <form role="form" method="post" action="/hear">
+            <div class="form-group">
+              <label for="location_name" class="control-label">What's the name of this place?</label>
+              <input type="text" class="form-control" name="location_name" placeholder="Location name">
+            </div>
+
+            <div class="form-group">
+              <label for="location_type" class="control-label">What type of place is this?</label>
+              <input type="text" class="form-control" name="location_type" placeholder="Location type">
+            </div>
+
+            <div class="form-group">
+              <label for="location_info" class="control-label">What information would you like here?</label>
+              <textarea name="location_info" class="form-control" rows="3"></textarea>
+              <input type="hidden" name="latitude" value="0.0">
+              <input type="hidden" name="longitude" value="0.0">
+            </div>
+            
+            <div class="form-group">
+              <button type="submit" class="btn btn-default">Save location</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      $(".alert-success").alert();
+      window.setTimeout(function() { $(".alert-success").alert('close'); }, 2000);
+    </script>
+    
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="js/bootstrap.min.js"></script>
+  </body>
+</html>

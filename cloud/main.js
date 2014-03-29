@@ -1,56 +1,64 @@
+require('cloud/app.js');
 
-Parse.Cloud.define("share", function(request, response) {
-  var ShareArticle = Parse.Object.extend("ShareArticle");
-  var shareArticle = new ShareArticle();
+Parse.Cloud.define("store_location", function(request, response) {
+  var HotSpot = Parse.Object.extend("HotSpot");
+  var hotspot = new HotSpot();
 
-  shareArticle.set("url", request.params.url);
-  shareArticle.set("title", request.params.title);
+  hotspot.set("location_name", request.params.location_name);
+  hotspot.set("location_type", request.params.location_type);
+  hotspot.set("location_info", request.params.location_info);
 
-  shareArticle.save(null, {
-    success: function(shareArticle) {
+  var point = new Parse.GeoPoint({
+    latitude: request.params.latitude,
+    longitude: request.params.longitude
+  });
+
+  hotspot.set("location", point);
+
+  hotspot.save(null, {
+    success: function(hotspot) {
       response.success({
         "stored": true,
-        "objectId": shareArticle.objectId 
+        "objectId": hotspot.objectId
       });
     },
-    error: function(shareArticle, error) {
+    error: function(hotspot, error) {
       response.error({
         "stored": false,
-        "title": shareArticle.get("title"),
-        "url": shareArticle.get("url")
+        "error": error
       });
     }
   });
 });
 
-Parse.Cloud.define("article", function(request, response) {
-  var ShareArticle = Parse.Object.extend("ShareArticle");
-  var query = new Parse.Query(ShareArticle);
-  query.equalTo("objectId", request.params.objectId);
-  query.find({
-    success: function(results) {
-      response.success(results);
-    },
-    error: function(error) {
-      response.error(error);
-    }
-  });
-});
-
-Parse.Cloud.define("articles", function(request, response) {
-  var ShareArticle = Parse.Object.extend("ShareArticle");
-  var ArticleCollection = Parse.Collection.extend({
-    model: ShareArticle,
-    query: (new Parse.Query(ShareArticle))
+Parse.Cloud.define("list_locations", function(request, response) {
+  var HotSpot = Parse.Object.extend("HotSpot");
+  var HotSpots = Parse.Collection.extend({
+    model: HotSpot,
+    query: (new Parse.Query(HotSpot))
   });
 
-  var collection = new ArticleCollection();
+  var collection = new HotSpots();
 
   collection.fetch({
     success: function(collection) {
       response.success(collection.models);
     },
     error: function(collection, error) {
+      response.error(error);
+    }
+  });
+});
+
+Parse.Cloud.define("find_location", function(request, response) {
+  var HotSpot = Parse.Object.extend("HotSpot");
+  var query = new Parse.Query(HotSpot);
+  query.equalTo("objectId", request.params.objectId);
+  query.find({
+    success: function(results) {
+      response.success(results);
+    },
+    error: function(error) {
       response.error(error);
     }
   });
