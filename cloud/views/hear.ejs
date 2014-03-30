@@ -52,26 +52,26 @@
 
           <h1>Hear Me Here</h1>
           <p class="lead">Say what's important about this place.</p>
-
+          <p>This is an experiment. At some point you can read more about it.</p>
         </div>
       </div>
       
       <div class="row">
         <div class="col-xs-12">
-          <form role="form" method="post" action="/hear">
+          <form role="form" method="post" action="/hear" id="location_form">
             <div class="form-group">
-              <label for="location_name" class="control-label">What's the name of this place?</label> <small id="location_name_tag"></small>
-              <input type="text" class="form-control" name="location_name" placeholder="Location name">
+              <label for="location_name" class="control-label">Name of place</label> <small id="location_name_tag"></small>
+              <input type="text" class="form-control" name="location_name" placeholder="Location name" required>
             </div>
 
             <div class="form-group">
-              <label for="location_type" class="control-label">What type of place is this?</label>
-              <input type="text" class="form-control" name="location_type" placeholder="Location type">
+              <label for="location_type" class="control-label">Type of place</label>
+              <input type="text" class="form-control" name="location_type" placeholder="Location type" required>
             </div>
 
             <div class="form-group">
-              <label for="location_info" class="control-label">What information would you like here?</label>
-              <textarea name="location_info" class="form-control" rows="3"></textarea>
+              <label for="location_info" class="control-label">Relevant information</label>
+              <textarea name="location_info" class="form-control" rows="3" required></textarea>
               <input id="location_latitude_field" type="hidden" name="latitude" value="0.0">
               <input id="location_longitude_field" type="hidden" name="longitude" value="0.0">
             </div>
@@ -86,7 +86,11 @@
     
     <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.11.1/jquery.validate.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <script src="js/hearme.js"></script>
+    <script>
+      $('#location_form').validate();
+    </script>
   </body>
 </html>
