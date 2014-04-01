@@ -2,3 +2,8 @@
   height: 250px;
   margin-bottom: 20px;
 }
+
+.padding {
+  padding-left: 15px;
+  padding-right: 15px;
+}
