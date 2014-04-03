@@ -29,24 +29,14 @@
 
     <div class="container-fluid">
       <div class="row pad-row">
-        <div class="alert alert-warning fade in">
+
+        <div class="alert alert-success fade in" style="display: none">
           <button type="button" class="close" data-dismiss="alert" aria-hidden="true">x</button>
-          <strong>Hi there!</strong> - This is a work in progress. Expect everything to fail once in a while.
         </div>
 
-        <% if (success && data) { %>
-        <div class="alert alert-success fade in">
+        <div class="alert alert-danger fade in" style="display: none">
           <button type="button" class="close" data-dismiss="alert" aria-hidden="true">x</button>
-          <strong>Saved location <span class="glyphicon glyphicon-ok"></span></strong> - <%= data.location_name %>, <%= data.location_type %>, <%= data.location_info %>
         </div>
-        <% } %>
-
-        <% if (!success) { %>
-        <div class="alert alert-danger fade in">
-          <button type="button" class="close" data-dismiss="alert" aria-hidden="true">x</button>
-          <strong>Couldn't save the data!</strong> - <%= data.location_name %>, <%= data.location_type %>, <%= data.location_info %>
-        </div>
-        <% } %>
 
         <h1>Hear Me Here</h1>
         <p class="lead">Say what's important about this place.</p>
@@ -54,7 +44,7 @@
       </div>
       
       <div class="row pad-row">
-        <form role="form" method="post" action="/hear" id="location_form">
+        <form role="form" method="post" action="/" id="location_form">
           <div class="form-group">
             <label for="location_name" class="control-label">Name of place</label> <small id="location_name_tag"></small>
             <div id="bloodhound">
@@ -89,7 +79,43 @@
     <script src="js/places_helper.js"></script>
     <script src="js/hearme.js"></script>
     <script>
-      $('#location_form').validate();
+
+      $(function(){
+        var showMessage = function(element, message, duration) {
+          var hideMessage = function() {
+            if (duration) {
+              setTimeout(function() {
+                element.fadeOut(800);
+              }, duration);
+            }
+          }
+
+          element.append(message);
+          element.fadeIn(100, hideMessage);
+        };
+
+        // Validate the form
+        $('#location_form').validate({
+          submitHandler: function(form){
+            var data = $(form).serialize();
+            var action = $(form).attr('action');
+            var type = $(form).attr('method');
+            $.ajax({
+              url: action,
+              type: type,
+              data: data
+            }).done(function(data){
+              if(data.message) {
+                showMessage($('.alert-success'), '<p>' + data.message + '</p>', 5000);
+                $('#location_form').remove();
+              }
+            }).fail(function(error){
+              showMessage($('.alert-danger'), '<p>Server error.</p>');
+            });
+            return false;
+          }
+        });
+      });
     </script>
   </body>
 </html>

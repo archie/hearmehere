@@ -20,11 +20,11 @@ app.set('view engine', 'ejs');          // Set the template engine
 app.use(express.bodyParser());          // Middleware for reading request body
 
 // Routes
-app.get('/hear', function(req, res) {
-  res.render('hear', { success: true, data: null });
+app.get('/', function(req, res) {
+  res.render('hear');
 });
 
-app.post('/hear', function(req, res) {
+app.post('/', function(req, res) {
 
   var formdata = {
     'location_name': req.body.location_name,
@@ -36,13 +36,16 @@ app.post('/hear', function(req, res) {
 
   Parse.Cloud.run('store_location', formdata, {
     success: function(hotspot) {
-      res.render('hear', { success: true, data: formdata });
+      // res.render('hear', { success: true, data: formdata });
+      res.send(200, { message: 'Your place has been saved.' });
     },
     error: function(error) {
       console.error(error);
-      res.render('hear', { success: false, data: formdata });
+      // res.render('hear', { success: false, data: formdata });
+      res.send(200, { message: 'Could not save place.' });
     }
   });
+
 });
 
 app.get('/internal/foursquare', function(req, res) {
