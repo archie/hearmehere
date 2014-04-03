@@ -24,6 +24,10 @@ app.get('/', function(req, res) {
   res.render('hear');
 });
 
+app.get('/hear', function(req, res) {
+  res.redirect(301, '/');
+});
+
 app.post('/', function(req, res) {
 
   var formdata = {
