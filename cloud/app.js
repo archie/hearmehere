@@ -3,13 +3,17 @@
 var express = require('express');
 var app = express();
 
-// Global app configuration section
-app.set('views', 'cloud/views');  // Specify the folder to find templates
+// Local development or production
+if ('local' == app.get('env')) {
+  app.use(express.static(__dirname + '/../public'));
+  app.set('views', __dirname + '/views');
+} else {
+  app.set('views', 'cloud/views');  // Specify the folder to find templates  
+};
+
+// Generic configuration
 app.set('view engine', 'ejs');    // Set the template engine
 app.use(express.bodyParser());    // Middleware for reading request body
-
-// This is an example of hooking up a request handler with a specific request
-// path and HTTP verb using the Express routing API.
 
 app.get('/hear', function(req, res) {
   res.render('hear', { success: true, data: null });
@@ -36,5 +40,15 @@ app.post('/hear', function(req, res) {
   });
 });
 
-// Attach the Express app to Cloud Code.
-app.listen();
+app.get('/internal/foursquare', function(req, res) {
+  res.send(JSON.stringify(req.params));
+});
+
+// Run express
+if ('local' == app.get('env')) {
+  app.listen(3000);
+} else {
+  app.listen();
+};
+
+module.exports = app;
