@@ -1,0 +1,6 @@
+var foursquareKeys = {
+  "foursquareClientId": "CLIENT_ID",
+  "foursquareClientSecret": "CLIENT_SECRET"
+};
+
+exports.foursquareKeys = foursquareKeys;

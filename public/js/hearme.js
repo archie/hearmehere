@@ -9,7 +9,15 @@ var Locator = function(lat, lon) {
     // find our position 
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(function(pos) {
-        codeLatLng.call(this, pos);
+        var lat = pos.coords.latitude;
+        var lng = pos.coords.longitude;
+        
+        setCoordinates.call(this, lat, lng);
+
+        var places = new Places();
+        places.find(lat, lng);
+        
+        codeLatLng.call(this, lat, lng);
       },
       function() {
         handleNoGeolocation.call(this, true);
@@ -22,12 +30,10 @@ var Locator = function(lat, lon) {
     });
   };
 
-  var codeLatLng = function(pos) {
+  var codeLatLng = function(lat, lon) {
     var marker;
     var geocoder = new google.maps.Geocoder();
     var infowindow = new google.maps.InfoWindow();
-    var lat = pos.coords.latitude;
-    var lon = pos.coords.longitude;
     var latlng = new google.maps.LatLng(lat, lon);
 
     defaultLatLong = latlng; // update default
@@ -35,7 +41,7 @@ var Locator = function(lat, lon) {
     geocoder.geocode({'latLng': latlng}, function(results, status) {
       if (status == google.maps.GeocoderStatus.OK) {
         if (results[1]) {
-          setFormVariables.call(this, results[1], lat, lon);
+          setLocationHelperText.call(this, results[1]);
           map.setZoom(16);
           map.setCenter(latlng);
           marker = new google.maps.Marker({
@@ -63,10 +69,13 @@ var Locator = function(lat, lon) {
     map.setCenter(mapOptions.center);
   };
 
-  var setFormVariables = function(result, latitude, longitude) {
-    $('#location_name_tag').text('You are at ' + result.formatted_address);
+  var setCoordinates = function(latitude, longitude) {
     $('#location_latitude_field').val(latitude);
     $('#location_longitude_field').val(longitude);
+  };
+
+  var setLocationHelperText = function(result) {
+    $('#location_name_tag').text('You are at ' + result.formatted_address);
   };
 
   return this;

@@ -1,20 +1,25 @@
 
-// These two lines are required to initialize Express in Cloud Code.
 var express = require('express');
 var app = express();
 
 // Local development or production
+var rootPath;
 if ('local' == app.get('env')) {
+  rootPath = __dirname + '/';
   app.use(express.static(__dirname + '/../public'));
-  app.set('views', __dirname + '/views');
 } else {
-  app.set('views', 'cloud/views');  // Specify the folder to find templates  
-};
+  rootPath = 'cloud/';
+}
+
+// Includes
+var foursquare = require(rootPath + 'foursquare');
 
 // Generic configuration
-app.set('view engine', 'ejs');    // Set the template engine
-app.use(express.bodyParser());    // Middleware for reading request body
+app.set('views', rootPath + 'views');   // Specify the folder to find templates  
+app.set('view engine', 'ejs');          // Set the template engine
+app.use(express.bodyParser());          // Middleware for reading request body
 
+// Routes
 app.get('/hear', function(req, res) {
   res.render('hear', { success: true, data: null });
 });
@@ -41,7 +46,7 @@ app.post('/hear', function(req, res) {
 });
 
 app.get('/internal/foursquare', function(req, res) {
-  res.send(JSON.stringify(req.params));
+  foursquare.suggestions(req, res);
 });
 
 // Run express
